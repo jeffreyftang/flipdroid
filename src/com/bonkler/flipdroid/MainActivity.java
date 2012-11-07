@@ -78,10 +78,12 @@ public class MainActivity extends SherlockFragmentActivity
             // Enable context menu on long press for each list item.
             // registerForContextMenu(getListView());
 
+            getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
             getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView parent, View view, int position, long id) {
                     mActionMode = getSherlockActivity().startActionMode(mActionModeCallback);
+                    getListView().setItemChecked(position, true);
                     return true;
                 }
             });
@@ -122,6 +124,9 @@ public class MainActivity extends SherlockFragmentActivity
             @Override
             public void onDestroyActionMode(ActionMode mode) {
                 mActionMode = null;
+                int i = getListView().getCheckedItemPosition();
+                if (i >= 0)
+                    getListView().setItemChecked(i, false);
             }
         };
 
