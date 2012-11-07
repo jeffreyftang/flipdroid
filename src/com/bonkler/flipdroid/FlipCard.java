@@ -55,7 +55,7 @@ public class FlipCard
     }
 
     // Attributes
-    private int id; // the ID of this card's database entry
+    private long id; // the ID of this card's database entry
     private String question;
     private String answer;
     private String hint;

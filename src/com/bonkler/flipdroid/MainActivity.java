@@ -72,21 +72,22 @@ public class MainActivity extends FragmentActivity
             Cursor c = mAdapter.getCursor();
             activeDeck = new FlipDeck(c, position);
 
-            // TODO: replace this section; have launched activity query the static activeDeck variable instead.
+            // // TODO: replace this section; have launched activity query the static activeDeck variable instead.
             
-            // Get the contents as a comma-separated string.
-            int i = c.getColumnIndex(FlipDroidContract.MyDecks.COLUMN_DECK_CONTENTS);
-            c.moveToPosition(position);
-            String cardIds = c.getString(i);
+            // // Get the contents as a comma-separated string.
+            // int i = c.getColumnIndex(FlipDroidContract.MyDecks.COLUMN_DECK_CONTENTS);
+            // c.moveToPosition(position);
+            // String cardIds = c.getString(i);
 
-            // Get the name of the deck.
-            String theName = c.getString(c.getColumnIndex(FlipDroidContract.MyDecks.COLUMN_DECK_NAME));
-            // Generate the intent and include deck and card ids.
+            // // Get the name of the deck.
+            // String theName = c.getString(c.getColumnIndex(FlipDroidContract.MyDecks.COLUMN_DECK_NAME));
+            // // Generate the intent and include deck and card ids.
+            
+            // intent.putExtra(CLICKED_DECK_ID, (int) id);
+            // intent.putExtra(CLICKED_DECK_CARD_IDS, cardIds);
+            // intent.putExtra(CLICKED_DECK_NAME, theName);
+
             Intent intent = new Intent(getActivity(), BrowseDeckActivity.class);
-            intent.putExtra(CLICKED_DECK_ID, (int) id);
-            intent.putExtra(CLICKED_DECK_CARD_IDS, cardIds);
-            intent.putExtra(CLICKED_DECK_NAME, theName);
-
             startActivity(intent);
         }
 

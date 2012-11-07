@@ -17,7 +17,7 @@ import android.util.Log;
 
 public class BrowseDeckActivity extends FragmentActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private FlipDeck fd;
+    private FlipDeck mDeck;
 
     private ViewPager mViewPager;
     private FlipPagerAdapter mPagerAdapter;
@@ -30,11 +30,14 @@ public class BrowseDeckActivity extends FragmentActivity implements LoaderManage
         super.onCreate(savedInstanceState);
         setContentView(R.layout.browse_deck);
 
-        Intent intent = getIntent();
-        int id = intent.getIntExtra(MainActivity.CLICKED_DECK_ID, -1);
-        contents = intent.getStringExtra(MainActivity.CLICKED_DECK_CARD_IDS);
-        String name = intent.getStringExtra(MainActivity.CLICKED_DECK_NAME);
-        fd = new FlipDeck(name, contents, id);
+        // Intent intent = getIntent();
+        // int id = intent.getIntExtra(MainActivity.CLICKED_DECK_ID, -1);
+        // contents = intent.getStringExtra(MainActivity.CLICKED_DECK_CARD_IDS);
+        // String name = intent.getStringExtra(MainActivity.CLICKED_DECK_NAME);
+        // mDeck = new FlipDeck(name, contents, id);
+
+        mDeck = MainActivity.DeckListFragment.getActiveDeck();
+        contents = mDeck.getContentsAsString();
 
         mPagerAdapter = new FlipPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -60,7 +63,7 @@ public class BrowseDeckActivity extends FragmentActivity implements LoaderManage
         // Called when an existing loader finishes its loading task.
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
-            mPagerAdapter.changeCards(fd.fillCards(c));
+            mPagerAdapter.changeCards(mDeck.fillCards(c));
             if (mViewPager.getAdapter() == null)
                 mViewPager.setAdapter(mPagerAdapter);
         }
