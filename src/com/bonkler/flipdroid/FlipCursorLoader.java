@@ -1,5 +1,7 @@
 package com.bonkler.flipdroid;
 
+import android.util.Log;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -93,7 +95,8 @@ public class FlipCursorLoader extends SQLCursorLoader {
             ContentValues values = (ContentValues) args[2];
             String whereClause = (String) args[3];
 
-            db.getWritableDatabase().update(table, values, whereClause, null);
+            long l = db.getWritableDatabase().update(table, values, whereClause, null);
+            Log.i("LOADER", "new id " + l);
 
             return(null);
         }

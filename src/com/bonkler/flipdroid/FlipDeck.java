@@ -9,10 +9,10 @@ public class FlipDeck {
     public FlipDeck(Cursor c, int position) {
         c.moveToPosition(position);
         name = c.getString(c.getColumnIndex(FlipDroidContract.MyDecks.COLUMN_DECK_NAME));
-        id = c.getLong(c.getColumnIndex(FlipDroidContract.MyCards._ID));
+        id = c.getLong(c.getColumnIndex(FlipDroidContract.MyDecks._ID));
         String theContents = c.getString(c.getColumnIndex(FlipDroidContract.MyDecks.COLUMN_DECK_CONTENTS));
         cardIds = new ArrayList<Long>();
-        if (!(theContents == null)) {
+        if (theContents != null && theContents.length() > 0) {
             String[] s = theContents.split(",");
             for(int i = 0; i < s.length; i++) {
                 cardIds.add(Long.parseLong(s[i]));
