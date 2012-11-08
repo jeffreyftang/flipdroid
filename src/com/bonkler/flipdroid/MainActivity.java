@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import android.util.Log;
 
-// import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
@@ -21,13 +20,10 @@ import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 
-// import android.view.ContextMenu;
-// import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
-// import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -148,9 +144,6 @@ public class MainActivity extends SherlockFragmentActivity
             EditText oldName = (EditText) view.findViewById(R.id.new_deck_name);
             int position = getListView().getCheckedItemPosition();
             Cursor c = mAdapter.getCursor();
-            // c.moveToPosition(position);
-            // String n = c.getString(c.getColumnIndex(FlipDroidContract.MyDecks.COLUMN_DECK_NAME));
-            // oldName.setText(n);
             final FlipDeck deck = new FlipDeck(c, position);
             oldName.setText(deck.getName()); 
 
@@ -219,44 +212,9 @@ public class MainActivity extends SherlockFragmentActivity
             Cursor c = mAdapter.getCursor();
             activeDeck = new FlipDeck(c, position);
 
-            // // TODO: replace this section; have launched activity query the static activeDeck variable instead.
-            
-            // // Get the contents as a comma-separated string.
-            // int i = c.getColumnIndex(FlipDroidContract.MyDecks.COLUMN_DECK_CONTENTS);
-            // c.moveToPosition(position);
-            // String cardIds = c.getString(i);
-
-            // // Get the name of the deck.
-            // String theName = c.getString(c.getColumnIndex(FlipDroidContract.MyDecks.COLUMN_DECK_NAME));
-            // // Generate the intent and include deck and card ids.
-            
-            // intent.putExtra(CLICKED_DECK_ID, (int) id);
-            // intent.putExtra(CLICKED_DECK_CARD_IDS, cardIds);
-            // intent.putExtra(CLICKED_DECK_NAME, theName);
-
             Intent intent = new Intent(getSherlockActivity(), BrowseDeckActivity.class);
             startActivity(intent);
         }
-
-        // @Override
-        // public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-        //     super.onCreateContextMenu(menu, v, menuInfo);
-        //     MenuInflater inflater = getActivity().getMenuInflater();
-        //     inflater.inflate(R.menu.deck_context_menu, menu);
-        // }
-
-        // @Override
-        // public boolean onContextItemSelected(MenuItem item) {
-        //     AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-        //     activeDeck = new FlipDeck(mAdapter.getCursor(), info.position);
-        //     switch (item.getItemId()) {
-        //         case R.id.edit_deck_option:
-        //             startEditDeck();
-        //             return true;
-        //         default:
-        //             return super.onContextItemSelected(item);
-        //     }
-        // }
 
         public static FlipDeck getActiveDeck() {
             return activeDeck;
