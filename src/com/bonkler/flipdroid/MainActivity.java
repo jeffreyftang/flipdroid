@@ -13,6 +13,7 @@ import android.support.v4.widget.*;
 import android.database.Cursor;
 import android.content.Intent;
 import android.view.View;
+import android.view.LayoutInflater;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
@@ -20,6 +21,7 @@ import android.content.DialogInterface.OnClickListener;
 
 // import android.view.ContextMenu;
 // import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -113,10 +115,16 @@ public class MainActivity extends SherlockFragmentActivity
 
         private void startNewDeck() {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage("Create a new deck?");
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            final View view = inflater.inflate(R.layout.new_deck_dialog, null); 
+            builder.setView(view);
+            builder.setMessage("Enter a name for this deck:");
             builder.setPositiveButton(R.string.create, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    // save the deck, refresh the loader.
+                    EditText edit = (EditText) view.findViewById(R.id.new_deck_name);
+                    String s = edit.getText().toString();
+                    FlipDeck deck = new FlipDeck(s);
+                    mLoader.insert(deck);
                 }
             });
             builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

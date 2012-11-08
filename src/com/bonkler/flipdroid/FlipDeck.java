@@ -30,6 +30,10 @@ public class FlipDeck {
         }
     }
 
+    public FlipDeck(String theName) {
+        name = theName;
+    }
+
     public ArrayList<FlipCard> fillCards(Cursor c) {
         cards = new ArrayList<FlipCard>(cardIds.size());
         for (int i = 0; i < cardIds.size(); i++) {
@@ -61,6 +65,10 @@ public class FlipDeck {
         }
 
         return result;
+    }
+
+    public String getName() {
+        return name;
     }
 
     // Iterating
