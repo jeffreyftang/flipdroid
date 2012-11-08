@@ -27,7 +27,7 @@ public class CardFragment extends Fragment implements OnClickListener {
     public void onClick(View v) {
         if (card.getState() == 1) {
             card.setState(2);
-            mTextView.setText(/* !(card == null) ? card.getAnswer() : */"No answer");
+            mTextView.setText(!(card == null) ? card.getAnswer() : "No answer");
         }
         else {
             card.setState(1);

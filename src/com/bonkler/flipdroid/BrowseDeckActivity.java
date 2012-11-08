@@ -14,6 +14,12 @@ import android.database.Cursor;
 import android.content.Intent;
 import android.view.View;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.widget.EditText;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -25,6 +31,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 public class BrowseDeckActivity extends SherlockFragmentActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private FlipDeck mDeck;
+    private Cursor mCursor;
 
     private ViewPager mViewPager;
     private FlipPagerAdapter mPagerAdapter;
@@ -63,11 +70,48 @@ public class BrowseDeckActivity extends SherlockFragmentActivity implements Load
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_card_option:
-                // startEditCard();
+                startEditCard();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void startEditCard() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View view = inflater.inflate(R.layout.new_card_dialog, null);
+
+        // Populate the text field
+        EditText oldQuestion = (EditText) view.findViewById(R.id.new_card_question);
+        EditText oldAnswer = (EditText) view.findViewById(R.id.new_card_answer);
+        int position = mViewPager.getCurrentItem();
+        final FlipCard card = new FlipCard(mCursor, position);
+        oldQuestion.setText(card.getQuestion()); 
+        oldAnswer.setText(card.getAnswer()); 
+
+        builder.setView(view);
+        builder.setMessage("Edit the question and answer:");
+        builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                EditText question = (EditText) view.findViewById(R.id.new_card_question);
+                EditText answer = (EditText) view.findViewById(R.id.new_card_answer);
+                String q = question.getText().toString();
+                String a = answer.getText().toString();
+
+                card.setQuestion(q);
+                card.setAnswer(a);
+                mLoader.update(card);
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // dismiss the dialog.
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     // LOADER CALLBACKS
@@ -88,6 +132,7 @@ public class BrowseDeckActivity extends SherlockFragmentActivity implements Load
         // Called when an existing loader finishes its loading task.
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
+            mCursor = c;
             mPagerAdapter.changeCards(mDeck.fillCards(c));
             if (mViewPager.getAdapter() == null)
                 mViewPager.setAdapter(mPagerAdapter);

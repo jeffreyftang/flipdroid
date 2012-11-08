@@ -56,6 +56,22 @@ public class FlipCursorLoader extends SQLCursorLoader {
             );   
     }
 
+    public void update(FlipCard card) {
+        UpdateTask task = new UpdateTask(this);
+        ContentValues values = new ContentValues();
+        values.put(FlipDroidContract.MyCards.COLUMN_CARD_QUESTION, card.getQuestion());
+        values.put(FlipDroidContract.MyCards.COLUMN_CARD_ANSWER, card.getAnswer());
+        values.put(FlipDroidContract.MyCards.COLUMN_CARD_HINT, card.getHint());
+        String whereClause = FlipDroidContract.MyCards._ID + "=" + card.getId();
+        task.execute(
+            mHelper,
+            FlipDroidContract.MyCards.TABLE_NAME,
+            values,
+            whereClause,
+            null
+            );    
+    }
+
     private class InsertTask extends AsyncTask<Object, Void, Void> {
         private FlipCursorLoader mLoader;
 

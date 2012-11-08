@@ -29,6 +29,17 @@ public class FlipPagerAdapter extends FragmentStatePagerAdapter {
         return cf;
     }
 
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
+    }
+
+    public FlipCard getCardAtIndex(int i) {
+        if (cards != null)
+            return cards.get(i);
+        return null;
+    }
+
     public ArrayList<FlipCard> changeCards(ArrayList<FlipCard> newCards) {
         ArrayList<FlipCard> oldCards = cards;
         cards = newCards;

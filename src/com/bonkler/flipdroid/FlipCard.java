@@ -1,5 +1,7 @@
 package com.bonkler.flipdroid;
 
+import android.database.Cursor;
+
 public class FlipCard
 {
     public FlipCard(String theQuestion, String theAnswer, String theHint)
@@ -13,6 +15,15 @@ public class FlipCard
     public FlipCard(String theQuestion, String theAnswer)
     {
         this(theQuestion, theAnswer, "Sorry, no hints for this question.");
+    }
+
+    public FlipCard(Cursor c, int position) {
+        c.moveToPosition(position);
+        id = c.getLong(c.getColumnIndex(FlipDroidContract.MyCards._ID));
+        question = c.getString(c.getColumnIndex(FlipDroidContract.MyCards.COLUMN_CARD_QUESTION));
+        answer = c.getString(c.getColumnIndex(FlipDroidContract.MyCards.COLUMN_CARD_ANSWER));
+        hint = c.getString(c.getColumnIndex(FlipDroidContract.MyCards.COLUMN_CARD_HINT));
+        mState = 1;
     }
 
     // Accessors
@@ -52,6 +63,10 @@ public class FlipCard
 
     public void setState(int i) {
         mState = i;
+    }
+
+    public long getId() {
+        return id;
     }
 
     // Attributes
