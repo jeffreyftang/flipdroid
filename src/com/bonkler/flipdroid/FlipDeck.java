@@ -71,6 +71,14 @@ public class FlipDeck {
         return name;
     }
 
+    public void setName(String s) {
+        name = s;
+    }
+
+    public long getId() {
+        return id;
+    }
+
     // Iterating
     // public boolean hasNext() {
     //     return itr.hasNext();

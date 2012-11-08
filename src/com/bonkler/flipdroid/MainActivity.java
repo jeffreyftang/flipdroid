@@ -3,6 +3,8 @@ package com.bonkler.flipdroid;
 import android.app.Activity;
 import android.os.Bundle;
 
+import android.util.Log;
+
 // import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
@@ -121,10 +123,45 @@ public class MainActivity extends SherlockFragmentActivity
             builder.setMessage("Enter a name for this deck:");
             builder.setPositiveButton(R.string.create, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    EditText edit = (EditText) view.findViewById(R.id.new_deck_name);
-                    String s = edit.getText().toString();
+                    EditText name = (EditText) view.findViewById(R.id.new_deck_name);
+                    String s = name.getText().toString();
                     FlipDeck deck = new FlipDeck(s);
                     mLoader.insert(deck);
+                }
+            });
+            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // dismiss the dialog.
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+
+        private void startEditDeck() {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            final View view = inflater.inflate(R.layout.new_deck_dialog, null);
+
+            // Populate the text field
+            EditText oldName = (EditText) view.findViewById(R.id.new_deck_name);
+            int position = getListView().getCheckedItemPosition();
+            Cursor c = mAdapter.getCursor();
+            // c.moveToPosition(position);
+            // String n = c.getString(c.getColumnIndex(FlipDroidContract.MyDecks.COLUMN_DECK_NAME));
+            // oldName.setText(n);
+            final FlipDeck deck = new FlipDeck(c, position);
+            oldName.setText(deck.getName()); 
+
+            builder.setView(view);
+            builder.setMessage("Enter a new name for this deck:");
+            builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    EditText name = (EditText) view.findViewById(R.id.new_deck_name);
+                    String s = name.getText().toString();
+                    deck.setName(s);
+                    mLoader.update(deck);
                 }
             });
             builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -157,15 +194,13 @@ public class MainActivity extends SherlockFragmentActivity
             // Called when the user selects a contextual menu item
             @Override
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                // switch (item.getItemId()) {
-                //     case R.id.menu_share:
-                //         shareCurrentItem();
-                //         mode.finish(); // Action picked, so close the CAB
-                //         return true;
-                //     default:
-                //         return false;
-                // }
-                return true;
+                switch (item.getItemId()) {
+                    case R.id.edit_deck_option:
+                        startEditDeck();
+                        return true;
+                    default:
+                        return false;
+                }
             }
 
             // Called when the user exits the action mode
@@ -222,11 +257,6 @@ public class MainActivity extends SherlockFragmentActivity
         //             return super.onContextItemSelected(item);
         //     }
         // }
-
-        private void startEditDeck() {
-            //Intent intent = new Intent(getActivity(), EditDeckActivity.class);
-            //startActivity(intent);
-        }
 
         public static FlipDeck getActiveDeck() {
             return activeDeck;

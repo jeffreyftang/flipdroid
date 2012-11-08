@@ -30,12 +30,28 @@ public class FlipCursorLoader extends SQLCursorLoader {
         InsertTask task = new InsertTask(this);
         ContentValues values = new ContentValues();
         values.put(FlipDroidContract.MyDecks.COLUMN_DECK_NAME, deck.getName());
+        values.put(FlipDroidContract.MyDecks.COLUMN_DECK_CONTENTS, "");
         task.execute(
             mHelper,
             FlipDroidContract.MyDecks.TABLE_NAME,
             null,
             values
             );
+    }
+
+    public void update(FlipDeck deck) {
+        UpdateTask task = new UpdateTask(this);
+        ContentValues values = new ContentValues();
+        values.put(FlipDroidContract.MyDecks.COLUMN_DECK_NAME, deck.getName());
+        values.put(FlipDroidContract.MyDecks.COLUMN_DECK_CONTENTS, deck.getContentsAsString());
+        String whereClause = FlipDroidContract.MyDecks._ID + "=" + deck.getId();
+        task.execute(
+            mHelper,
+            FlipDroidContract.MyDecks.TABLE_NAME,
+            values,
+            whereClause,
+            null
+            );   
     }
 
     private class InsertTask extends AsyncTask<Object, Void, Void> {
@@ -53,6 +69,31 @@ public class FlipCursorLoader extends SQLCursorLoader {
             ContentValues values = (ContentValues) args[3];
 
             db.getWritableDatabase().insert(table, nullColumnHack, values);
+
+            return(null);
+        }
+
+        @Override
+        protected void onPostExecute(Void v) {
+            mLoader.onContentChanged();
+        }
+    }
+
+    private class UpdateTask extends AsyncTask<Object, Void, Void> {
+        private FlipCursorLoader mLoader;
+
+        public UpdateTask(FlipCursorLoader loader) {
+            mLoader = loader;
+        }
+
+        @Override
+        protected Void doInBackground(Object... args) {
+            SQLiteOpenHelper db = (SQLiteOpenHelper) args[0];
+            String table = (String) args[1];
+            ContentValues values = (ContentValues) args[2];
+            String whereClause = (String) args[3];
+
+            db.getWritableDatabase().update(table, values, whereClause, null);
 
             return(null);
         }
