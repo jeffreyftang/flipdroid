@@ -15,7 +15,14 @@ import android.content.Intent;
 import android.view.View;
 import android.util.Log;
 
-public class BrowseDeckActivity extends FragmentActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.ActionMode;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+
+public class BrowseDeckActivity extends SherlockFragmentActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private FlipDeck mDeck;
 
@@ -43,8 +50,24 @@ public class BrowseDeckActivity extends FragmentActivity implements LoaderManage
         mViewPager = (ViewPager) findViewById(R.id.pager);
 
         mLoader = (FlipCursorLoader)getSupportLoaderManager().initLoader(2, null, this);
+    }
 
-        getActionBar().hide();
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getSupportMenuInflater();
+        inflater.inflate(R.menu.card_action_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.edit_card_option:
+                // startEditCard();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     // LOADER CALLBACKS
