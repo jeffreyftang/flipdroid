@@ -13,6 +13,10 @@ import android.support.v4.widget.*;
 import android.database.Cursor;
 import android.content.Intent;
 import android.view.View;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 
 // import android.view.ContextMenu;
 // import android.view.ContextMenu.ContextMenuInfo;
@@ -78,6 +82,8 @@ public class MainActivity extends SherlockFragmentActivity
             // Enable context menu on long press for each list item.
             // registerForContextMenu(getListView());
 
+            setHasOptionsMenu(true);
+
             getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
             getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
                 @Override
@@ -87,6 +93,40 @@ public class MainActivity extends SherlockFragmentActivity
                     return true;
                 }
             });
+        }
+
+        @Override
+        public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+            inflater.inflate(R.menu.deck_action_menu, menu);
+        }
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.new_deck_option:
+                    startNewDeck();
+                    return true;
+                default:
+                    return super.onOptionsItemSelected(item);
+            }
+        }
+
+        private void startNewDeck() {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage("Create a new deck?");
+            builder.setPositiveButton(R.string.create, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // save the deck, refresh the loader.
+                }
+            });
+            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // dismiss the dialog.
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
         }
 
         private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {

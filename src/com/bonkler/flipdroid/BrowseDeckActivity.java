@@ -43,6 +43,8 @@ public class BrowseDeckActivity extends FragmentActivity implements LoaderManage
         mViewPager = (ViewPager) findViewById(R.id.pager);
 
         mLoader = (FlipCursorLoader)getSupportLoaderManager().initLoader(2, null, this);
+
+        getActionBar().hide();
     }
 
     // LOADER CALLBACKS
