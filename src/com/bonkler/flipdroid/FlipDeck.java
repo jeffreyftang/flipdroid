@@ -1,9 +1,12 @@
 package com.bonkler.flipdroid;
 
 import java.util.*;
+import android.util.Log;
 
 import android.database.Cursor;
 import android.content.ContentValues;
+
+// TODO: implement the current position function.
 
 public class FlipDeck {
 
@@ -111,11 +114,12 @@ public class FlipDeck {
     //     return itr.previous();
     // }
 
-    // public void shuffleSelf() {
-    //     if (!cards.isEmpty())
-    //         Collections.shuffle(cards);
-    //     currentPos = 0;
-    // } 
+    public void shuffleSelf() {
+        if (cardIds != null && !cardIds.isEmpty())
+            Collections.shuffle(cardIds);
+        currentPos = 0;
+        Log.i("SHUFFLE", getContentsAsString());
+    } 
 
     // Attributes
     private String name;

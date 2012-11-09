@@ -72,6 +72,9 @@ public class BrowseDeckActivity extends SherlockFragmentActivity implements Load
             case R.id.new_card_option:
                 startNewCard();
                 return true;
+            case R.id.shuffle_deck_option:
+                startShuffleDeck();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -130,6 +133,30 @@ public class BrowseDeckActivity extends SherlockFragmentActivity implements Load
                 FlipCard card = new FlipCard(q, a);
                 MainActivity.DeckListFragment.needRefresh = true;
                 mLoader.insert(card, mDeck);
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // dismiss the dialog.
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void startShuffleDeck() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View view = inflater.inflate(R.layout.shuffle_deck_dialog, null); 
+        builder.setView(view);
+        builder.setMessage("Shuffle this deck?");
+        builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                mDeck.shuffleSelf();
+                MainActivity.DeckListFragment.needRefresh = true;
+                mLoader.update(mDeck);
+                mViewPager.setCurrentItem(0, false);
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

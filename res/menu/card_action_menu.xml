@@ -6,4 +6,7 @@
     <item android:id="@+id/new_card_option"
         android:title="New"
         android:showAsAction="ifRoom" />
+    <item android:id="@+id/shuffle_deck_option"
+        android:title="Shuffle"
+        android:showAsAction="ifRoom" />
 </menu>

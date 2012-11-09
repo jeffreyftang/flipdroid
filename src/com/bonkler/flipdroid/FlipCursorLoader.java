@@ -42,17 +42,23 @@ public class FlipCursorLoader extends SQLCursorLoader {
             );
     }
 
-    public void insert(FlipCard card, FlipDeck deck) throws InterruptedException, ExecutionException, CancellationException {
+    public void insert(FlipCard card, FlipDeck deck) {
         InsertTask task1 = new InsertTask(this, false);
+        long id = -1;
 
         // Value mapping for the new card
         ContentValues values = FlipCard.contentValuesFromCard(card);
-        long id = task1.execute(
+        try { id = task1.execute(
             mHelper,
             FlipDroidContract.MyCards.TABLE_NAME,
             null,
             values
-            ).get();
+            ).get(); }
+        catch (Exception e) {
+        }
+
+        if (id < 0)
+            return;
 
         Log.i("ADDING", "" + id);
         deck.getCardIds().add(id);

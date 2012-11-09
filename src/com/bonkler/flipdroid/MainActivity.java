@@ -92,6 +92,7 @@ public class MainActivity extends SherlockFragmentActivity
                 public boolean onItemLongClick(AdapterView parent, View view, int position, long id) {
                     mActionMode = getSherlockActivity().startActionMode(mActionModeCallback);
                     getListView().setItemChecked(position, true);
+                    activeDeck = new FlipDeck(mAdapter.getCursor(), position);
                     return true;
                 }
             });
@@ -180,6 +181,31 @@ public class MainActivity extends SherlockFragmentActivity
             dialog.show();
         }
 
+        private void startShuffleDeck() {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            final View view = inflater.inflate(R.layout.shuffle_deck_dialog, null);
+            final FlipDeck deck = activeDeck;
+
+            builder.setView(view);
+            builder.setMessage("Shuffle this deck?");
+            builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    deck.shuffleSelf();
+                    mLoader.update(deck);
+                }
+            });
+            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // dismiss the dialog.
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+        }
+
         private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
             // Called when the action mode is created; startActionMode() was called
             @Override
@@ -203,6 +229,9 @@ public class MainActivity extends SherlockFragmentActivity
                 switch (item.getItemId()) {
                     case R.id.edit_deck_option:
                         startEditDeck();
+                        return true;
+                    case R.id.shuffle_deck_option:
+                        startShuffleDeck();
                         return true;
                     default:
                         return false;

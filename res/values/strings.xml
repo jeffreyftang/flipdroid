@@ -3,5 +3,6 @@
     <string name="app_name">FlipDroid</string>
     <string name="create">Create</string>
     <string name="save">Save</string>
+    <string name="confirm">Confirm</string>    
     <string name="cancel">Cancel</string>
 </resources>
