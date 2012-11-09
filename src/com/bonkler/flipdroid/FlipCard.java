@@ -1,6 +1,7 @@
 package com.bonkler.flipdroid;
 
 import android.database.Cursor;
+import android.content.ContentValues;
 
 public class FlipCard
 {
@@ -24,6 +25,15 @@ public class FlipCard
         answer = c.getString(c.getColumnIndex(FlipDroidContract.MyCards.COLUMN_CARD_ANSWER));
         hint = c.getString(c.getColumnIndex(FlipDroidContract.MyCards.COLUMN_CARD_HINT));
         mState = 1;
+    }
+
+    public static ContentValues contentValuesFromCard(FlipCard card) {
+        ContentValues values = new ContentValues();
+        values.put(FlipDroidContract.MyCards.COLUMN_CARD_QUESTION, card.getQuestion());
+        values.put(FlipDroidContract.MyCards.COLUMN_CARD_ANSWER, card.getAnswer());
+        values.put(FlipDroidContract.MyCards.COLUMN_CARD_HINT, card.getHint());
+
+        return values;
     }
 
     // Accessors

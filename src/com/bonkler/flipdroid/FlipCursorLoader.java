@@ -29,10 +29,8 @@ public class FlipCursorLoader extends SQLCursorLoader {
     }
 
     public void insert(FlipDeck deck) {
-        InsertTask task = new InsertTask(this);
-        ContentValues values = new ContentValues();
-        values.put(FlipDroidContract.MyDecks.COLUMN_DECK_NAME, deck.getName());
-        values.put(FlipDroidContract.MyDecks.COLUMN_DECK_CONTENTS, "");
+        InsertTask task = new InsertTask(this, true);
+        ContentValues values = FlipDeck.contentValuesFromDeck(deck);
         task.execute(
             mHelper,
             FlipDroidContract.MyDecks.TABLE_NAME,
@@ -41,11 +39,37 @@ public class FlipCursorLoader extends SQLCursorLoader {
             );
     }
 
+    public void insert(FlipCard card, FlipDeck deck) {
+        InsertTask task1 = new InsertTask(this, true);
+
+        // Value mapping for the new card
+        ContentValues values = FlipCard.contentValuesFromCard(card);
+        task1.execute(
+            mHelper,
+            FlipDroidContract.MyCards.TABLE_NAME,
+            null,
+            values
+            );
+
+        deck.getCardIds().add(task1.id);
+
+        UpdateTask task2 = new UpdateTask(this, false);
+        
+        ContentValues deckValues = FlipDeck.contentValuesFromDeck(deck);
+        String whereClause = FlipDroidContract.MyDecks._ID + "=" + deck.getId();
+        task2.execute(
+            mHelper,
+            FlipDroidContract.MyDecks.TABLE_NAME,
+            deckValues,
+            whereClause,
+            null
+            );   
+
+    }
+
     public void update(FlipDeck deck) {
-        UpdateTask task = new UpdateTask(this);
-        ContentValues values = new ContentValues();
-        values.put(FlipDroidContract.MyDecks.COLUMN_DECK_NAME, deck.getName());
-        values.put(FlipDroidContract.MyDecks.COLUMN_DECK_CONTENTS, deck.getContentsAsString());
+        UpdateTask task = new UpdateTask(this, true);
+        ContentValues values = FlipDeck.contentValuesFromDeck(deck);
         String whereClause = FlipDroidContract.MyDecks._ID + "=" + deck.getId();
         task.execute(
             mHelper,
@@ -57,11 +81,8 @@ public class FlipCursorLoader extends SQLCursorLoader {
     }
 
     public void update(FlipCard card) {
-        UpdateTask task = new UpdateTask(this);
-        ContentValues values = new ContentValues();
-        values.put(FlipDroidContract.MyCards.COLUMN_CARD_QUESTION, card.getQuestion());
-        values.put(FlipDroidContract.MyCards.COLUMN_CARD_ANSWER, card.getAnswer());
-        values.put(FlipDroidContract.MyCards.COLUMN_CARD_HINT, card.getHint());
+        UpdateTask task = new UpdateTask(this, true);
+        ContentValues values = FlipCard.contentValuesFromCard(card);
         String whereClause = FlipDroidContract.MyCards._ID + "=" + card.getId();
         task.execute(
             mHelper,
@@ -72,11 +93,9 @@ public class FlipCursorLoader extends SQLCursorLoader {
             );    
     }
 
-    private class InsertTask extends AsyncTask<Object, Void, Void> {
-        private FlipCursorLoader mLoader;
-
-        public InsertTask(FlipCursorLoader loader) {
-            mLoader = loader;
+    private class InsertTask extends CrudTask<Object, Void, Void> {
+        public InsertTask(FlipCursorLoader loader, boolean notify) {
+            super(loader, notify);
         }
 
         @Override
@@ -86,22 +105,15 @@ public class FlipCursorLoader extends SQLCursorLoader {
             String nullColumnHack = (String) args[2];
             ContentValues values = (ContentValues) args[3];
 
-            db.getWritableDatabase().insert(table, nullColumnHack, values);
+            id = db.getWritableDatabase().insert(table, nullColumnHack, values);
 
             return(null);
         }
-
-        @Override
-        protected void onPostExecute(Void v) {
-            mLoader.onContentChanged();
-        }
     }
 
-    private class UpdateTask extends AsyncTask<Object, Void, Void> {
-        private FlipCursorLoader mLoader;
-
-        public UpdateTask(FlipCursorLoader loader) {
-            mLoader = loader;
+    private class UpdateTask extends CrudTask<Object, Void, Void> {
+        public UpdateTask(FlipCursorLoader loader, boolean notify) {
+            super(loader, notify);
         }
 
         @Override
@@ -111,15 +123,9 @@ public class FlipCursorLoader extends SQLCursorLoader {
             ContentValues values = (ContentValues) args[2];
             String whereClause = (String) args[3];
 
-            long l = db.getWritableDatabase().update(table, values, whereClause, null);
-            Log.i("LOADER", "new id " + l);
+            id = db.getWritableDatabase().update(table, values, whereClause, null);
 
             return(null);
-        }
-
-        @Override
-        protected void onPostExecute(Void v) {
-            mLoader.onContentChanged();
         }
     }
 

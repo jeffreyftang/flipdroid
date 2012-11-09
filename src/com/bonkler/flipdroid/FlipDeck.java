@@ -3,6 +3,7 @@ package com.bonkler.flipdroid;
 import java.util.*;
 
 import android.database.Cursor;
+import android.content.ContentValues;
 
 public class FlipDeck {
 
@@ -69,12 +70,24 @@ public class FlipDeck {
         return result;
     }
 
+    public static ContentValues contentValuesFromDeck(FlipDeck deck) {
+        ContentValues values = new ContentValues();
+        values.put(FlipDroidContract.MyDecks.COLUMN_DECK_NAME, deck.getName());
+        values.put(FlipDroidContract.MyDecks.COLUMN_DECK_CONTENTS, deck.getContentsAsString());
+
+        return values;
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String s) {
         name = s;
+    }
+
+    public ArrayList<Long> getCardIds() {
+        return cardIds;
     }
 
     public long getId() {
