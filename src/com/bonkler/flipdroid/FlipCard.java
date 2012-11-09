@@ -5,17 +5,18 @@ import android.content.ContentValues;
 
 public class FlipCard
 {
-    public FlipCard(String theQuestion, String theAnswer, String theHint)
+    public FlipCard(String theQuestion, String theAnswer, String theHint, long theId)
     {
         question = theQuestion;
         answer = theAnswer;
         hint = theHint;
+        id = theId;
         mState = 1;
     }
 
     public FlipCard(String theQuestion, String theAnswer)
     {
-        this(theQuestion, theAnswer, "Sorry, no hints for this question.");
+        this(theQuestion, theAnswer, "Sorry, no hints for this question.", -1);
     }
 
     public FlipCard(Cursor c, int position) {
@@ -24,6 +25,14 @@ public class FlipCard
         question = c.getString(c.getColumnIndex(FlipDroidContract.MyCards.COLUMN_CARD_QUESTION));
         answer = c.getString(c.getColumnIndex(FlipDroidContract.MyCards.COLUMN_CARD_ANSWER));
         hint = c.getString(c.getColumnIndex(FlipDroidContract.MyCards.COLUMN_CARD_HINT));
+        mState = 1;
+    }
+
+    public FlipCard(FlipCard card) {
+        id = card.getId();
+        question = card.getQuestion();
+        answer = card.getAnswer();
+        hint = card.getHint();
         mState = 1;
     }
 

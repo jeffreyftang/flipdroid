@@ -51,7 +51,7 @@ public class FlipDeck {
             String question = c.getString(c.getColumnIndex(FlipDroidContract.MyCards.COLUMN_CARD_QUESTION));
             String answer = c.getString(c.getColumnIndex(FlipDroidContract.MyCards.COLUMN_CARD_ANSWER));
             String hint = c.getString(c.getColumnIndex(FlipDroidContract.MyCards.COLUMN_CARD_HINT));
-            FlipCard fc = new FlipCard(question, answer, hint);
+            FlipCard fc = new FlipCard(question, answer, hint, theId);
             cards.set(cardIds.indexOf(theId), fc);
             c.moveToNext();
         }

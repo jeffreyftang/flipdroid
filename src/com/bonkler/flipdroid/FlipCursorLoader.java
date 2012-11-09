@@ -185,6 +185,7 @@ public class FlipCursorLoader extends SQLCursorLoader {
             String whereClause = (String) args[3];
 
             id = db.getWritableDatabase().update(table, values, whereClause, null);
+            Log.i("UPDATED", "" + id);
 
             return(null);
         }

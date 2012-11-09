@@ -92,13 +92,15 @@ public class BrowseDeckActivity extends SherlockFragmentActivity implements Load
         EditText oldQuestion = (EditText) view.findViewById(R.id.new_card_question);
         EditText oldAnswer = (EditText) view.findViewById(R.id.new_card_answer);
         int position = mViewPager.getCurrentItem();
-        final FlipCard card = new FlipCard(mCursor, position);
+        Log.i("POSITION", "" + position);
+        final FlipCard card = ((CardFragment) mPagerAdapter.getItem(position)).getCard();
+        Log.i("PREVIOUS ID", "" + card.getId());
         oldQuestion.setText(card.getQuestion()); 
         oldAnswer.setText(card.getAnswer()); 
 
         builder.setView(view);
         builder.setMessage("Edit the question and answer:");
-        builder.setPositiveButton(R.string.create, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 EditText question = (EditText) view.findViewById(R.id.new_card_question);
                 EditText answer = (EditText) view.findViewById(R.id.new_card_answer);
@@ -107,6 +109,8 @@ public class BrowseDeckActivity extends SherlockFragmentActivity implements Load
 
                 card.setQuestion(q);
                 card.setAnswer(a);
+                Log.i("ANSWER", card.getAnswer());
+                Log.i("ID", "" + card.getId());
                 mLoader.update(card);
             }
         });

@@ -6,6 +6,7 @@ import android.view.*;
 import android.view.View.OnClickListener;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.graphics.Typeface;
 
 public class CardFragment extends Fragment implements OnClickListener {
 
@@ -31,15 +32,21 @@ public class CardFragment extends Fragment implements OnClickListener {
     public void onClick(View v) {
         if (mState == 1) {
             mState = 2;
+            mTextView.setTypeface(null, Typeface.ITALIC);
             mTextView.setText(!(card == null) ? card.getAnswer() : "No answer");
         }
         else {
             mState = 1;
+            mTextView.setTypeface(null, Typeface.NORMAL);
             mTextView.setText(!(card == null) ? card.getQuestion() : "No question");
         }
     }
 
     public void setCard(FlipCard fc) {
         card = fc;
+    }
+
+    public FlipCard getCard() {
+        return card;
     }
 }
