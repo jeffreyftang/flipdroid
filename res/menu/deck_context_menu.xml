@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/edit_deck_option"
-        android:title="Edit" />
+        android:title="Edit" 
+        android:icon="@drawable/ic_menu_edit" />
     <item android:id="@+id/shuffle_deck_option"
-        android:title="Shuffle" />
+        android:title="Shuffle"
+        android:icon="@drawable/ic_menu_always_landscape_portrait" />
     <item android:id="@+id/delete_deck_option"
-        android:title="Delete" />
+        android:title="Delete"
+        android:icon="@drawable/ic_menu_delete" />
 </menu>
