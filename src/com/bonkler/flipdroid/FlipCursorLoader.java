@@ -9,6 +9,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
 
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
+
 public class FlipCursorLoader extends SQLCursorLoader {
 
     SQLiteOpenHelper mHelper;
@@ -39,19 +42,23 @@ public class FlipCursorLoader extends SQLCursorLoader {
             );
     }
 
-    public void insert(FlipCard card, FlipDeck deck) {
-        InsertTask task1 = new InsertTask(this, true);
+    public void insert(FlipCard card, FlipDeck deck) throws InterruptedException, ExecutionException, CancellationException {
+        InsertTask task1 = new InsertTask(this, false);
 
         // Value mapping for the new card
         ContentValues values = FlipCard.contentValuesFromCard(card);
-        task1.execute(
+        long id = task1.execute(
             mHelper,
             FlipDroidContract.MyCards.TABLE_NAME,
             null,
             values
-            );
+            ).get();
 
-        deck.getCardIds().add(task1.id);
+        Log.i("ADDING", "" + id);
+        deck.getCardIds().add(id);
+        mSelection = FlipDroidContract.MyCards._ID + " IN (" + deck.getContentsAsString() + ")";
+        Log.i("RESULT", deck.getContentsAsString());
+        onContentChanged();
 
         UpdateTask task2 = new UpdateTask(this, false);
         
@@ -64,7 +71,6 @@ public class FlipCursorLoader extends SQLCursorLoader {
             whereClause,
             null
             );   
-
     }
 
     public void update(FlipDeck deck) {
@@ -93,21 +99,22 @@ public class FlipCursorLoader extends SQLCursorLoader {
             );    
     }
 
-    private class InsertTask extends CrudTask<Object, Void, Void> {
+    private class InsertTask extends CrudTask<Object, Void, Long> {
         public InsertTask(FlipCursorLoader loader, boolean notify) {
             super(loader, notify);
         }
 
         @Override
-        protected Void doInBackground(Object... args) {
+        protected Long doInBackground(Object... args) {
             SQLiteOpenHelper db = (SQLiteOpenHelper) args[0];
             String table = (String) args[1];
             String nullColumnHack = (String) args[2];
             ContentValues values = (ContentValues) args[3];
 
             id = db.getWritableDatabase().insert(table, nullColumnHack, values);
+            Log.i("INSERT", "" + id);
 
-            return(null);
+            return id;
         }
     }
 

@@ -11,6 +11,8 @@ public class CardFragment extends Fragment implements OnClickListener {
 
     private FlipCard card;
     private TextView mTextView;
+
+    // TODO move card state into this fragment instead.
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

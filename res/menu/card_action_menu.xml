@@ -3,4 +3,7 @@
     <item android:id="@+id/edit_card_option"
         android:title="Edit"
         android:showAsAction="ifRoom" />
+    <item android:id="@+id/new_card_option"
+        android:title="New"
+        android:showAsAction="ifRoom" />
 </menu>

@@ -37,8 +37,6 @@ public class BrowseDeckActivity extends SherlockFragmentActivity implements Load
     private FlipPagerAdapter mPagerAdapter;
     private FlipCursorLoader mLoader;
 
-    private String contents;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +49,6 @@ public class BrowseDeckActivity extends SherlockFragmentActivity implements Load
         // mDeck = new FlipDeck(name, contents, id);
 
         mDeck = MainActivity.DeckListFragment.getActiveDeck();
-        contents = mDeck.getContentsAsString();
 
         mPagerAdapter = new FlipPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -71,6 +68,9 @@ public class BrowseDeckActivity extends SherlockFragmentActivity implements Load
         switch (item.getItemId()) {
             case R.id.edit_card_option:
                 startEditCard();
+                return true;
+            case R.id.new_card_option:
+                startNewCard();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -92,7 +92,7 @@ public class BrowseDeckActivity extends SherlockFragmentActivity implements Load
 
         builder.setView(view);
         builder.setMessage("Edit the question and answer:");
-        builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.create, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 EditText question = (EditText) view.findViewById(R.id.new_card_question);
                 EditText answer = (EditText) view.findViewById(R.id.new_card_answer);
@@ -114,17 +114,46 @@ public class BrowseDeckActivity extends SherlockFragmentActivity implements Load
         dialog.show();
     }
 
+    private void startNewCard() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View view = inflater.inflate(R.layout.new_card_dialog, null); 
+        builder.setView(view);
+        builder.setMessage("Enter a question and answer:");
+        builder.setPositiveButton(R.string.create, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                EditText question = (EditText) view.findViewById(R.id.new_card_question);
+                EditText answer = (EditText) view.findViewById(R.id.new_card_answer);
+                String q = question.getText().toString();
+                String a = answer.getText().toString();
+
+                FlipCard card = new FlipCard(q, a);
+                MainActivity.DeckListFragment.needRefresh = true;
+                mLoader.insert(card, mDeck);
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // dismiss the dialog.
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     // LOADER CALLBACKS
 
     // Called when a new loader is needed.
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            Log.i("LOADER", mDeck.getContentsAsString());
             return new FlipCursorLoader(
                 this,
                 FlipDroidDBHelper.getInstance(this),
                 FlipDroidContract.MyCards.TABLE_NAME,
                 null,
-                FlipDroidContract.MyCards._ID + " IN (" + contents + ")",
+                FlipDroidContract.MyCards._ID + " IN (" + mDeck.getContentsAsString() + ")",
                 null,
                 null);
         }

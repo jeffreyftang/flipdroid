@@ -63,6 +63,8 @@ public class MainActivity extends SherlockFragmentActivity
 
         private ActionMode mActionMode;
 
+        public static boolean needRefresh = false;
+
         String[] fromColumns = {FlipDroidContract.MyDecks.COLUMN_DECK_NAME};
         int[] toViews = {R.id.text};
 
@@ -93,6 +95,17 @@ public class MainActivity extends SherlockFragmentActivity
                     return true;
                 }
             });
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            Log.i("FRAGMENT", "fragment onresume called");
+            if (needRefresh) {
+                Log.i("REFRESH", "refresh decks");
+                needRefresh = false;
+                mLoader.onContentChanged();
+            }
         }
 
         @Override
