@@ -8,6 +8,7 @@
     <TextView android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" 
-        android:background="?android:attr/activatedBackgroundIndicator" />
+        android:background="?android:attr/activatedBackgroundIndicator" 
+        style="?android:attr/textAppearanceMedium" />
 
 </LinearLayout>
