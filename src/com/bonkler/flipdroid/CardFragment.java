@@ -14,6 +14,9 @@ public class CardFragment extends Fragment implements OnClickListener {
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        setRetainInstance(true);
+
         View rootView = inflater.inflate(R.layout.card_fragment, container, false);
 
         String viewText = !(card == null) ? card.getQuestion() : "No question";
