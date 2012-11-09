@@ -10,9 +10,8 @@ import android.widget.TextView;
 public class CardFragment extends Fragment implements OnClickListener {
 
     private FlipCard card;
+    private int mState = 1;
     private TextView mTextView;
-
-    // TODO move card state into this fragment instead.
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -30,12 +29,12 @@ public class CardFragment extends Fragment implements OnClickListener {
     }
 
     public void onClick(View v) {
-        if (card.getState() == 1) {
-            card.setState(2);
+        if (mState == 1) {
+            mState = 2;
             mTextView.setText(!(card == null) ? card.getAnswer() : "No answer");
         }
         else {
-            card.setState(1);
+            mState = 1;
             mTextView.setText(!(card == null) ? card.getQuestion() : "No question");
         }
     }

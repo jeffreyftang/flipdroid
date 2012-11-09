@@ -4,4 +4,6 @@
         android:title="Edit" />
     <item android:id="@+id/shuffle_deck_option"
         android:title="Shuffle" />
+    <item android:id="@+id/delete_deck_option"
+        android:title="Delete" />
 </menu>

@@ -75,6 +75,9 @@ public class BrowseDeckActivity extends SherlockFragmentActivity implements Load
             case R.id.shuffle_deck_option:
                 startShuffleDeck();
                 return true;
+            case R.id.delete_card_option:
+                startDeleteCard();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -148,7 +151,7 @@ public class BrowseDeckActivity extends SherlockFragmentActivity implements Load
     private void startShuffleDeck() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
-        final View view = inflater.inflate(R.layout.shuffle_deck_dialog, null); 
+        final View view = inflater.inflate(R.layout.base_deck_dialog, null); 
         builder.setView(view);
         builder.setMessage("Shuffle this deck?");
         builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
@@ -157,6 +160,32 @@ public class BrowseDeckActivity extends SherlockFragmentActivity implements Load
                 MainActivity.DeckListFragment.needRefresh = true;
                 mLoader.update(mDeck);
                 mViewPager.setCurrentItem(0, false);
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // dismiss the dialog.
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void startDeleteCard() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View view = inflater.inflate(R.layout.base_deck_dialog, null);
+        int position = mViewPager.getCurrentItem();
+        final FlipCard card = new FlipCard(mCursor, position);
+        final FlipDeck deck = mDeck;
+
+        builder.setView(view);
+        builder.setMessage("Delete this card?");
+        builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                MainActivity.DeckListFragment.needRefresh = true;
+                mLoader.delete(card, deck);
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

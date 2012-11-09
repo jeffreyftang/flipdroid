@@ -105,6 +105,54 @@ public class FlipCursorLoader extends SQLCursorLoader {
             );    
     }
 
+    // Delete the given card from the given deck.
+    public void delete(FlipCard card, FlipDeck deck) {
+        DeleteTask task1 = new DeleteTask(this, false);
+        String whereClause = FlipDroidContract.MyCards._ID + "=" + card.getId();
+        task1.execute(
+            mHelper,
+            FlipDroidContract.MyCards.TABLE_NAME,
+            whereClause,
+            null
+            );
+
+        deck.getCardIds().remove(card.getId());
+        mSelection = FlipDroidContract.MyCards._ID + " IN (" + deck.getContentsAsString() + ")";
+        onContentChanged();
+
+        UpdateTask task2 = new UpdateTask(this, false);
+        ContentValues deckValues = FlipDeck.contentValuesFromDeck(deck);
+        String whereClause2 = FlipDroidContract.MyDecks._ID + "=" + deck.getId();
+        task2.execute(
+            mHelper,
+            FlipDroidContract.MyDecks.TABLE_NAME,
+            deckValues,
+            whereClause2,
+            null
+            );
+    }
+
+    // Delete the given deck.
+    public void delete(FlipDeck deck) {
+        DeleteTask task1 = new DeleteTask(this, false);
+        String whereClause = FlipDroidContract.MyCards._ID + " IN (" + deck.getContentsAsString() + ")";
+        task1.execute(
+            mHelper,
+            FlipDroidContract.MyCards.TABLE_NAME,
+            whereClause,
+            null
+            );
+
+        DeleteTask task2 = new DeleteTask(this, true);
+        String whereClause2 = FlipDroidContract.MyDecks._ID + "=" + deck.getId();
+        task2.execute(
+            mHelper,
+            FlipDroidContract.MyDecks.TABLE_NAME,
+            whereClause2,
+            null
+            );
+    }
+
     private class InsertTask extends CrudTask<Object, Void, Long> {
         public InsertTask(FlipCursorLoader loader, boolean notify) {
             super(loader, notify);
@@ -137,6 +185,24 @@ public class FlipCursorLoader extends SQLCursorLoader {
             String whereClause = (String) args[3];
 
             id = db.getWritableDatabase().update(table, values, whereClause, null);
+
+            return(null);
+        }
+    }
+
+    private class DeleteTask extends CrudTask<Object, Void, Void> {
+        public DeleteTask(FlipCursorLoader loader, boolean notify) {
+            super(loader, notify);
+        }
+
+        @Override
+        protected Void doInBackground(Object... args) {
+            SQLiteOpenHelper db = (SQLiteOpenHelper) args[0];
+            String table = (String) args[1];
+            String whereClause = (String) args[2];
+
+            if (whereClause != null)
+                db.getWritableDatabase().delete(table, whereClause, null);
 
             return(null);
         }

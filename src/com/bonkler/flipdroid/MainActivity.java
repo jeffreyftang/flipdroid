@@ -184,7 +184,7 @@ public class MainActivity extends SherlockFragmentActivity
         private void startShuffleDeck() {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             LayoutInflater inflater = getActivity().getLayoutInflater();
-            final View view = inflater.inflate(R.layout.shuffle_deck_dialog, null);
+            final View view = inflater.inflate(R.layout.base_deck_dialog, null);
             final FlipDeck deck = activeDeck;
 
             builder.setView(view);
@@ -193,6 +193,30 @@ public class MainActivity extends SherlockFragmentActivity
                 public void onClick(DialogInterface dialog, int id) {
                     deck.shuffleSelf();
                     mLoader.update(deck);
+                }
+            });
+            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // dismiss the dialog.
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+        }
+
+        private void startDeleteDeck() {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            final View view = inflater.inflate(R.layout.base_deck_dialog, null);
+            final FlipDeck deck = activeDeck;
+
+            builder.setView(view);
+            builder.setMessage("Delete this deck and all its contents?");
+            builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    mLoader.delete(deck);
                 }
             });
             builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -232,6 +256,9 @@ public class MainActivity extends SherlockFragmentActivity
                         return true;
                     case R.id.shuffle_deck_option:
                         startShuffleDeck();
+                        return true;
+                    case R.id.delete_deck_option:
+                        startDeleteDeck();
                         return true;
                     default:
                         return false;
