@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="?android:attr/activatedBackgroundIndicator">
 
-    <TextView android:id="@+id/text"
+    <TextView android:id="@+id/deck_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"  
         style="?android:attr/textAppearanceMedium"
@@ -14,12 +14,11 @@
         android:paddingTop="5sp"
         android:paddingLeft="10sp" />
 
-    <TextView android:id="@+id/text2"
+    <TextView android:id="@+id/card_total"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" 
         style="?android:attr/textAppearanceSmall"
         android:paddingBottom="5sp"
-        android:paddingLeft="10sp"
-        android:text="42 cards" />
+        android:paddingLeft="10sp" />
 
 </LinearLayout>

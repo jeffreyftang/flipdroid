@@ -20,6 +20,7 @@ import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 
+import android.widget.TextView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.AdapterView;
@@ -55,7 +56,7 @@ public class MainActivity extends SherlockFragmentActivity
     }
 
     // A fragment that will hold the list of FlipDecks
-    public static class DeckListFragment extends SherlockListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
+    public static class DeckListFragment extends SherlockListFragment implements LoaderManager.LoaderCallbacks<Cursor>, SimpleCursorAdapter.ViewBinder {
 
         private FlipCursorLoader mLoader;
         private SimpleCursorAdapter mAdapter;
@@ -65,8 +66,8 @@ public class MainActivity extends SherlockFragmentActivity
 
         public static boolean needRefresh = false;
 
-        String[] fromColumns = {FlipDroidContract.MyDecks.COLUMN_DECK_NAME};
-        int[] toViews = {R.id.text};
+        String[] fromColumns = {FlipDroidContract.MyDecks.COLUMN_DECK_NAME, FlipDroidContract.MyDecks.COLUMN_DECK_CONTENTS};
+        int[] toViews = {R.id.deck_name, R.id.card_total};
 
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {
@@ -74,6 +75,7 @@ public class MainActivity extends SherlockFragmentActivity
 
             // Initialize an adapter with a null cursor. We will update this cursor in the onLoadFinished() callback.
             mAdapter = new SimpleCursorAdapter(getSherlockActivity(), R.layout.deck_item, null, fromColumns, toViews, 0);
+            mAdapter.setViewBinder(this);
             setEmptyText("No decks found.");
             setListAdapter(mAdapter);
             setListShownNoAnimation(false); // Don't display a loading animation.
@@ -287,6 +289,28 @@ public class MainActivity extends SherlockFragmentActivity
 
         public static FlipDeck getActiveDeck() {
             return activeDeck;
+        }
+
+        // VIEWBINDER
+        @Override
+        public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+            String s = cursor.getString(columnIndex);
+            if (view instanceof TextView) {
+                if (view.getId() == R.id.card_total) {
+                    if (s.length() == 0) {
+                        s = "0 cards";
+                    }
+                    else if (!(s.contains(","))) {
+                        s = "1 card";
+                    }
+                    else {
+                        s = "" + s.split(",").length + " cards";
+                    }
+                }
+                ((TextView) view).setText(s);
+                return true;
+            }
+            return false;
         }
 
         // LOADER CALLBACKS
