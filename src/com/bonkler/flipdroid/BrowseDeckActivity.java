@@ -94,6 +94,9 @@ public class BrowseDeckActivity extends SherlockFragmentActivity implements Load
         int position = mViewPager.getCurrentItem();
         Log.i("POSITION", "" + position);
         final FlipCard card = ((CardFragment) mPagerAdapter.getItem(position)).getCard();
+        if (card == null) {
+            return;
+        }
         Log.i("PREVIOUS ID", "" + card.getId());
         oldQuestion.setText(card.getQuestion()); 
         oldAnswer.setText(card.getAnswer()); 
@@ -181,7 +184,9 @@ public class BrowseDeckActivity extends SherlockFragmentActivity implements Load
         LayoutInflater inflater = getLayoutInflater();
         final View view = inflater.inflate(R.layout.base_deck_dialog, null);
         int position = mViewPager.getCurrentItem();
-        final FlipCard card = new FlipCard(mCursor, position);
+        final FlipCard card = ((CardFragment) mPagerAdapter.getItem(position)).getCard();
+        if (card == null)
+            return;
         final FlipDeck deck = mDeck;
 
         builder.setView(view);

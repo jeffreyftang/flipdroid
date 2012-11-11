@@ -24,7 +24,8 @@ public class FlipPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int i) {
         CardFragment cf = new CardFragment();
-        cf.setCard(cards.get(i));
+        if (cards.size() > 0)
+            cf.setCard(cards.get(i));
 
         return cf;
     }
