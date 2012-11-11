@@ -36,12 +36,6 @@ import com.actionbarsherlock.app.SherlockListFragment;
 
 public class MainActivity extends SherlockFragmentActivity
 {
-    public final static String CLICKED_DECK_NAME = "com.bonkler.flipdroid.DECK_NAME";
-    public final static String CLICKED_DECK_ID = "com.bonkler.flipdroid.DECK_ID";
-    public final static String CLICKED_DECK_CARD_IDS = "com.bonkler.flipdroid.CARD_IDS";
-
-    
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,9 +97,7 @@ public class MainActivity extends SherlockFragmentActivity
         @Override
         public void onResume() {
             super.onResume();
-            Log.i("FRAGMENT", "fragment onresume called");
             if (needRefresh) {
-                Log.i("REFRESH", "refresh decks");
                 needRefresh = false;
                 mLoader.onContentChanged();
             }

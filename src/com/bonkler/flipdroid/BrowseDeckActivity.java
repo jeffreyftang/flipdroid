@@ -42,12 +42,6 @@ public class BrowseDeckActivity extends SherlockFragmentActivity implements Load
         super.onCreate(savedInstanceState);
         setContentView(R.layout.browse_deck);
 
-        // Intent intent = getIntent();
-        // int id = intent.getIntExtra(MainActivity.CLICKED_DECK_ID, -1);
-        // contents = intent.getStringExtra(MainActivity.CLICKED_DECK_CARD_IDS);
-        // String name = intent.getStringExtra(MainActivity.CLICKED_DECK_NAME);
-        // mDeck = new FlipDeck(name, contents, id);
-
         mDeck = MainActivity.DeckListFragment.getActiveDeck();
 
         mPagerAdapter = new FlipPagerAdapter(getSupportFragmentManager());
@@ -92,12 +86,10 @@ public class BrowseDeckActivity extends SherlockFragmentActivity implements Load
         EditText oldQuestion = (EditText) view.findViewById(R.id.new_card_question);
         EditText oldAnswer = (EditText) view.findViewById(R.id.new_card_answer);
         int position = mViewPager.getCurrentItem();
-        Log.i("POSITION", "" + position);
         final FlipCard card = ((CardFragment) mPagerAdapter.getItem(position)).getCard();
         if (card == null) {
             return;
         }
-        Log.i("PREVIOUS ID", "" + card.getId());
         oldQuestion.setText(card.getQuestion()); 
         oldAnswer.setText(card.getAnswer()); 
 
@@ -112,8 +104,6 @@ public class BrowseDeckActivity extends SherlockFragmentActivity implements Load
 
                 card.setQuestion(q);
                 card.setAnswer(a);
-                Log.i("ANSWER", card.getAnswer());
-                Log.i("ID", "" + card.getId());
                 mLoader.update(card);
             }
         });
@@ -212,7 +202,6 @@ public class BrowseDeckActivity extends SherlockFragmentActivity implements Load
     // Called when a new loader is needed.
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            Log.i("LOADER", mDeck.getContentsAsString());
             return new FlipCursorLoader(
                 this,
                 FlipDroidDBHelper.getInstance(this),

@@ -97,23 +97,6 @@ public class FlipDeck {
         return id;
     }
 
-    // Iterating
-    // public boolean hasNext() {
-    //     return itr.hasNext();
-    // }
-
-    // public FlipCard getNext() {
-    //     return itr.next();
-    // }
-
-    // public boolean hasPrevious() {
-    //     return itr.hasPrevious();
-    // }
-
-    // public FlipCard getPrevious() {
-    //     return itr.previous();
-    // }
-
     public void shuffleSelf() {
         if (cardIds != null && !cardIds.isEmpty())
             Collections.shuffle(cardIds);
@@ -127,5 +110,4 @@ public class FlipDeck {
     private ArrayList<Long> cardIds;
     private int currentPos;
     private long id;
-    // private ListIterator<FlipCard> itr;
 }

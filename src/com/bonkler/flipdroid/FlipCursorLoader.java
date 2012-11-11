@@ -60,10 +60,8 @@ public class FlipCursorLoader extends SQLCursorLoader {
         if (id < 0)
             return;
 
-        Log.i("ADDING", "" + id);
         deck.getCardIds().add(id);
         mSelection = FlipDroidContract.MyCards._ID + " IN (" + deck.getContentsAsString() + ")";
-        Log.i("RESULT", deck.getContentsAsString());
         onContentChanged();
 
         UpdateTask task2 = new UpdateTask(this, false);
@@ -166,7 +164,6 @@ public class FlipCursorLoader extends SQLCursorLoader {
             ContentValues values = (ContentValues) args[3];
 
             id = db.getWritableDatabase().insert(table, nullColumnHack, values);
-            Log.i("INSERT", "" + id);
 
             return id;
         }
@@ -185,7 +182,6 @@ public class FlipCursorLoader extends SQLCursorLoader {
             String whereClause = (String) args[3];
 
             id = db.getWritableDatabase().update(table, values, whereClause, null);
-            Log.i("UPDATED", "" + id);
 
             return(null);
         }
