@@ -25,7 +25,7 @@ public class CardFragment extends Fragment implements OnClickListener {
         mTextView = (TextView) rootView.findViewById(R.id.card_text);
         mTextView.setText(viewText);
 
-        rootView.setOnClickListener(this);
+        mTextView.setOnClickListener(this);
         return rootView;
     }
 
