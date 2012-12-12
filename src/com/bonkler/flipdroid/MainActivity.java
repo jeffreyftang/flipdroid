@@ -289,7 +289,7 @@ public class MainActivity extends SherlockFragmentActivity
             String s = cursor.getString(columnIndex);
             if (view instanceof TextView) {
                 if (view.getId() == R.id.card_total) {
-                    if (s.length() == 0) {
+                    if (s == null || s.length() == 0) {
                         s = "0 cards";
                     }
                     else if (!(s.contains(","))) {
