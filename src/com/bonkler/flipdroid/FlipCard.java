@@ -3,96 +3,78 @@ package com.bonkler.flipdroid;
 import android.database.Cursor;
 import android.content.ContentValues;
 
-public class FlipCard
-{
-    public FlipCard(String theQuestion, String theAnswer, String theHint, long theId)
-    {
-        question = theQuestion;
-        answer = theAnswer;
-        hint = theHint;
-        id = theId;
-        mState = 1;
+public class FlipCard {
+
+    private long mId;
+    private String mQuestion;
+    private String mAnswer;
+    private String mHint;
+
+    public FlipCard(String question, String answer, String hint, long id) {
+        mQuestion = question;
+        mAnswer = answer;
+        mHint = hint;
+        mId = id;
     }
 
-    public FlipCard(String theQuestion, String theAnswer)
-    {
-        this(theQuestion, theAnswer, "Sorry, no hints for this question.", -1);
+    public FlipCard(String question, String answer) {
+        this(question, answer, "Sorry, no hints for this question.", -1);
     }
 
     public FlipCard(Cursor c, int position) {
         c.moveToPosition(position);
-        id = c.getLong(c.getColumnIndex(FlipDroidContract.MyCards._ID));
-        question = c.getString(c.getColumnIndex(FlipDroidContract.MyCards.COLUMN_CARD_QUESTION));
-        answer = c.getString(c.getColumnIndex(FlipDroidContract.MyCards.COLUMN_CARD_ANSWER));
-        hint = c.getString(c.getColumnIndex(FlipDroidContract.MyCards.COLUMN_CARD_HINT));
-        mState = 1;
+        mId = c.getLong(c.getColumnIndex(FlipDroidContract.MyCards._ID));
+        mQuestion = c.getString(c.getColumnIndex(FlipDroidContract.MyCards.COLUMN_CARD_QUESTION));
+        mAnswer = c.getString(c.getColumnIndex(FlipDroidContract.MyCards.COLUMN_CARD_ANSWER));
+        mHint = c.getString(c.getColumnIndex(FlipDroidContract.MyCards.COLUMN_CARD_HINT));
     }
 
     public FlipCard(FlipCard card) {
-        id = card.getId();
-        question = card.getQuestion();
-        answer = card.getAnswer();
-        hint = card.getHint();
-        mState = 1;
+        mId = card.getId();
+        mQuestion = card.getQuestion();
+        mAnswer = card.getAnswer();
+        mHint = card.getHint();
     }
 
-    public static ContentValues contentValuesFromCard(FlipCard card) {
+    public ContentValues getContentValues() {
         ContentValues values = new ContentValues();
-        values.put(FlipDroidContract.MyCards.COLUMN_CARD_QUESTION, card.getQuestion());
-        values.put(FlipDroidContract.MyCards.COLUMN_CARD_ANSWER, card.getAnswer());
-        values.put(FlipDroidContract.MyCards.COLUMN_CARD_HINT, card.getHint());
+        values.put(FlipDroidContract.MyCards.COLUMN_CARD_QUESTION, mQuestion);
+        values.put(FlipDroidContract.MyCards.COLUMN_CARD_ANSWER, mAnswer);
+        values.put(FlipDroidContract.MyCards.COLUMN_CARD_HINT, mHint);
 
         return values;
     }
 
     // Accessors
-    public String getQuestion()
-    {
-        return question;
+    public String getQuestion() {
+        return mQuestion;
     }
 
-    public void setQuestion(String s)
-    {
-        question = s;
+    public void setQuestion(String s) {
+        mQuestion = s;
     }
 
-    public String getAnswer()
-    {
-        return answer;
+    public String getAnswer() {
+        return mAnswer;
     }
 
-    public void setAnswer(String s)
-    {
-        answer = s;
+    public void setAnswer(String s) {
+        mAnswer = s;
     }
 
-    public String getHint()
-    {
-        return hint;
+    public String getHint() {
+        return mHint;
     }
 
-    public void setHint(String s)
-    {
-        hint = s;
-    }
-
-    public int getState() {
-        return mState;
-    }
-
-    public void setState(int i) {
-        mState = i;
+    public void setHint(String s) {
+        mHint = s;
     }
 
     public long getId() {
-        return id;
+        return mId;
     }
 
-    // Attributes
-    private long id; // the ID of this card's database entry
-    private String question;
-    private String answer;
-    private String hint;
-
-    private int mState; // 0 = hint, 1 = question, 2 = answer
+    public void setId(long id) {
+        mId = id;
+    }
 }

@@ -10,38 +10,44 @@ import android.content.ContentValues;
 
 public class FlipDeck {
 
+    private String mName;
+    private ArrayList<FlipCard> mCards;
+    private ArrayList<Long> mCardIds;
+    private int mCurrentPos;
+    private long mId;
+
     public FlipDeck(Cursor c, int position) {
         c.moveToPosition(position);
-        name = c.getString(c.getColumnIndex(FlipDroidContract.MyDecks.COLUMN_DECK_NAME));
-        id = c.getLong(c.getColumnIndex(FlipDroidContract.MyDecks._ID));
+        mName = c.getString(c.getColumnIndex(FlipDroidContract.MyDecks.COLUMN_DECK_NAME));
+        mId = c.getLong(c.getColumnIndex(FlipDroidContract.MyDecks._ID));
         String theContents = c.getString(c.getColumnIndex(FlipDroidContract.MyDecks.COLUMN_DECK_CONTENTS));
-        cardIds = new ArrayList<Long>();
+        mCardIds = new ArrayList<Long>();
         if (theContents != null && theContents.length() > 0) {
             String[] s = theContents.split(",");
             for(int i = 0; i < s.length; i++) {
-                cardIds.add(Long.parseLong(s[i]));
+                mCardIds.add(Long.parseLong(s[i]));
             }
         }
     }
 
-    public FlipDeck(String theName, String theContents, long theId) {
-        name = theName;
-        id = theId;
-        cardIds = new ArrayList<Long>();
-        String[] s = theContents.split(",");
+    public FlipDeck(String name, String contents, long id) {
+        mName = name;
+        mId = id;
+        mCardIds = new ArrayList<Long>();
+        String[] s = contents.split(",");
         for(int i = 0; i < s.length; i++) {
-            cardIds.add(Long.parseLong(s[i]));
+            mCardIds.add(Long.parseLong(s[i]));
         }
     }
 
     public FlipDeck(String theName) {
-        name = theName;
+        mName = theName;
     }
 
     public ArrayList<FlipCard> fillCards(Cursor c) {
-        cards = new ArrayList<FlipCard>(cardIds.size());
-        for (int i = 0; i < cardIds.size(); i++) {
-            cards.add(null);
+        mCards = new ArrayList<FlipCard>(mCardIds.size());
+        for (int i = 0; i < mCardIds.size(); i++) {
+            mCards.add(null);
         }
 
         // TODO rewrite this to use the new FlipCard constructor
@@ -52,18 +58,18 @@ public class FlipDeck {
             String answer = c.getString(c.getColumnIndex(FlipDroidContract.MyCards.COLUMN_CARD_ANSWER));
             String hint = c.getString(c.getColumnIndex(FlipDroidContract.MyCards.COLUMN_CARD_HINT));
             FlipCard fc = new FlipCard(question, answer, hint, theId);
-            cards.set(cardIds.indexOf(theId), fc);
+            mCards.set(mCardIds.indexOf(theId), fc);
             c.moveToNext();
         }
 
-        return cards;
+        return mCards;
     }
 
     public String getContentsAsString() {
         String result = "";
-        if (!(cardIds == null)) { 
-            for (int i = 0; i < cardIds.size(); i++) {
-                result += (cardIds.get(i) + ",");
+        if (!(mCardIds == null)) { 
+            for (int i = 0; i < mCardIds.size(); i++) {
+                result += (mCardIds.get(i) + ",");
             }
         // remove trailing comma 
         if (result.endsWith(",")) 
@@ -73,41 +79,34 @@ public class FlipDeck {
         return result;
     }
 
-    public static ContentValues contentValuesFromDeck(FlipDeck deck) {
+    public ContentValues getContentValues() {
         ContentValues values = new ContentValues();
-        values.put(FlipDroidContract.MyDecks.COLUMN_DECK_NAME, deck.getName());
-        values.put(FlipDroidContract.MyDecks.COLUMN_DECK_CONTENTS, deck.getContentsAsString());
+        values.put(FlipDroidContract.MyDecks.COLUMN_DECK_NAME, mName);
+        values.put(FlipDroidContract.MyDecks.COLUMN_DECK_CONTENTS, getContentsAsString());
 
         return values;
     }
 
     public String getName() {
-        return name;
+        return mName;
     }
 
     public void setName(String s) {
-        name = s;
+        mName = s;
     }
 
     public ArrayList<Long> getCardIds() {
-        return cardIds;
+        return mCardIds;
     }
 
     public long getId() {
-        return id;
+        return mId;
     }
 
     public void shuffleSelf() {
-        if (cardIds != null && !cardIds.isEmpty())
-            Collections.shuffle(cardIds);
-        currentPos = 0;
+        if (mCardIds != null && !mCardIds.isEmpty())
+            Collections.shuffle(mCardIds);
+        mCurrentPos = 0;
         Log.i("SHUFFLE", getContentsAsString());
     } 
-
-    // Attributes
-    private String name;
-    private ArrayList<FlipCard> cards;
-    private ArrayList<Long> cardIds;
-    private int currentPos;
-    private long id;
 }

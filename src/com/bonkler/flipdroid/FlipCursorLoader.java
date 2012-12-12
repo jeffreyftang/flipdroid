@@ -33,7 +33,7 @@ public class FlipCursorLoader extends SQLCursorLoader {
 
     public void insert(FlipDeck deck) {
         InsertTask task = new InsertTask(this, true);
-        ContentValues values = FlipDeck.contentValuesFromDeck(deck);
+        ContentValues values = deck.getContentValues();
         task.execute(
             mHelper,
             FlipDroidContract.MyDecks.TABLE_NAME,
@@ -47,7 +47,7 @@ public class FlipCursorLoader extends SQLCursorLoader {
         long id = -1;
 
         // Value mapping for the new card
-        ContentValues values = FlipCard.contentValuesFromCard(card);
+        ContentValues values = card.getContentValues();
         try { id = task1.execute(
             mHelper,
             FlipDroidContract.MyCards.TABLE_NAME,
@@ -66,7 +66,7 @@ public class FlipCursorLoader extends SQLCursorLoader {
 
         UpdateTask task2 = new UpdateTask(this, false);
         
-        ContentValues deckValues = FlipDeck.contentValuesFromDeck(deck);
+        ContentValues deckValues = deck.getContentValues();
         String whereClause = FlipDroidContract.MyDecks._ID + "=" + deck.getId();
         task2.execute(
             mHelper,
@@ -79,7 +79,7 @@ public class FlipCursorLoader extends SQLCursorLoader {
 
     public void update(FlipDeck deck) {
         UpdateTask task = new UpdateTask(this, true);
-        ContentValues values = FlipDeck.contentValuesFromDeck(deck);
+        ContentValues values = deck.getContentValues();
         String whereClause = FlipDroidContract.MyDecks._ID + "=" + deck.getId();
         task.execute(
             mHelper,
@@ -92,7 +92,7 @@ public class FlipCursorLoader extends SQLCursorLoader {
 
     public void update(FlipCard card) {
         UpdateTask task = new UpdateTask(this, true);
-        ContentValues values = FlipCard.contentValuesFromCard(card);
+        ContentValues values = card.getContentValues();
         String whereClause = FlipDroidContract.MyCards._ID + "=" + card.getId();
         task.execute(
             mHelper,
@@ -119,7 +119,7 @@ public class FlipCursorLoader extends SQLCursorLoader {
         onContentChanged();
 
         UpdateTask task2 = new UpdateTask(this, false);
-        ContentValues deckValues = FlipDeck.contentValuesFromDeck(deck);
+        ContentValues deckValues = deck.getContentValues();
         String whereClause2 = FlipDroidContract.MyDecks._ID + "=" + deck.getId();
         task2.execute(
             mHelper,
