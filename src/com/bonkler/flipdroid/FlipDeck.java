@@ -50,16 +50,9 @@ public class FlipDeck {
             mCards.add(null);
         }
 
-        // TODO rewrite this to use the new FlipCard constructor
-        c.moveToFirst();
         for (int i = 0; i < c.getCount(); i++) {
-            long theId = c.getLong(c.getColumnIndex(FlipDroidContract.MyCards._ID));
-            String question = c.getString(c.getColumnIndex(FlipDroidContract.MyCards.COLUMN_CARD_QUESTION));
-            String answer = c.getString(c.getColumnIndex(FlipDroidContract.MyCards.COLUMN_CARD_ANSWER));
-            String hint = c.getString(c.getColumnIndex(FlipDroidContract.MyCards.COLUMN_CARD_HINT));
-            FlipCard fc = new FlipCard(question, answer, hint, theId);
-            mCards.set(mCardIds.indexOf(theId), fc);
-            c.moveToNext();
+            FlipCard card = new FlipCard(c, i);
+            mCards.set(mCardIds.indexOf(card.getId()), card);
         }
 
         return mCards;
